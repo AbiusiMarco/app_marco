@@ -348,3 +348,125 @@ button.btn-secondary {
     padding: 1.5rem 1.75rem;
   }
 }
+
+/* === SHELL & HEADER SUPERIORE === */
+
+.app-shell {
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, #dbeafe 0, #f3f5fb 45%, #eef2ff 100%);
+}
+
+.page-header {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.2rem 1rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.app-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+}
+
+.app-subtitle {
+  font-size: 0.92rem;
+  color: #4b5563;
+  max-width: 520px;
+}
+
+/* Sovrascrivo h1 qui nel header */
+.page-header h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.15rem;
+}
+
+/* === HOME GRID CON CARD === */
+
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.home-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.home-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+/* Contatore palinsesto */
+.palinsesto-counter {
+  margin-top: 0.6rem;
+}
+
+/* Linea decorativa sopra titolo palinsesto */
+.card-header-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.card-header-line::before {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, #2563eb, transparent);
+  max-width: 60px;
+}
+
+/* Miglioro il margine del main container rispetto al nuovo header */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+}
+
+/* HOME title non più usato come h1 dentro .container */
+.container > h1 {
+  display: none;
+}
+
+/* Desktop: home in 3 colonne */
+@media (min-width: 768px) {
+  .page-header {
+    padding: 1.6rem 1rem 0.8rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .home-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
