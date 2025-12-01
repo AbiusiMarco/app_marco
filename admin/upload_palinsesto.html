@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin - Carica Palinsesto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body { font-family: system-ui; background:#f5f5f5; margin:0; padding:20px; }
+    .card {
+      max-width: 600px;
+      margin: 0 auto;
+      background:#fff;
+      border-radius:10px;
+      padding:16px;
+      box-shadow:0 2px 4px rgba(0,0,0,0.1);
+    }
+    button {
+      padding:8px 14px;
+      border:none;
+      border-radius:8px;
+      background:#007bff;
+      color:#fff;
+      cursor:pointer;
+      margin-top:8px;
+    }
+    input[type="file"], input[type="password"] {
+      width:100%;
+      margin-top:4px;
+    }
+    .small { font-size:0.8rem; color:#666; }
+    .ok { color:#006400; }
+    .err { color:#b00020; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Admin - Carica Palinsesto</h1>
+    <p class="small">
+      Carica il file <code>palinsesto.json</code> generato dallo script.
+      Verrà svuotata la tabella esistente e inserite le nuove partite.
+    </p>
+
+    <label>Chiave admin</label>
+    <input type="password" id="adminKey" placeholder="supersegreto123" />
+
+    <br/><br/>
+
+    <label>File JSON palinsesto</label>
+    <input type="file" id="jsonFile" accept=".json,application/json" />
+
+    <button type="button" onclick="uploadPalinsesto()">Carica nel database</button>
+
+    <p id="status" class="small"></p>
+  </div>
+
+  <script>
+    async function uploadPalinsesto() {
+      const status = document.getElementById('status');
+      status.textContent = '';
+      status.className = 'small';
+
+      const key = document.getElementById('adminKey').value.trim();
+      const fileInput = document.getElementById('jsonFile');
+      const file = fileInput.files[0];
+
+      if (!key) {
+        status.textContent = 'Inserisci la chiave admin.';
+        status.classList.add('err');
+        return;
+      }
+      if (!file) {
+        status.textContent = 'Seleziona il file palinsesto.json.';
+        status.classList.add('err');
+        return;
+      }
+
+      const text = await file.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        status.textContent = 'JSON non valido.';
+        status.classList.add('err');
+        return;
+      }
+      if (!Array.isArray(data)) {
+        status.textContent = 'Il file deve contenere un array di partite.';
+        status.classList.add('err');
+        return;
+      }
+
+      status.textContent = 'Invio dati al server...';
+      try {
+        const res = await fetch('/api/admin/upload-palinsesto', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-key': key
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          status.textContent = 'Errore: ' + (errData.error || res.status);
+          status.classList.add('err');
+          return;
+        }
+
+        const resData = await res.json();
+        status.textContent = 'OK, palinsesto salvato. Partite inserite: ' + (resData.inserted || 0);
+        status.classList.add('ok');
+
+      } catch (e) {
+        console.error(e);
+        status.textContent = 'Errore di rete o server.';
+        status.classList.add('err');
+      }
+    }
+  </script>
+</body>
+</html>

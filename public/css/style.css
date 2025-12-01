@@ -1,0 +1,158 @@
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f5f5f5;
+  color: #222;
+}
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+h1 {
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+  text-align: center;
+}
+h2 {
+  font-size: 1.1rem;
+  margin: 12px 0 8px;
+}
+.card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.07);
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  flex: 1;
+  margin-bottom: 6px;
+}
+label {
+  font-size: 0.8rem;
+  margin-bottom: 2px;
+}
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+button {
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 6px;
+}
+button:active {
+  opacity: 0.85;
+}
+.btn-full { width: 100%; }
+.btn-secondary {
+  background: #e0e0e0;
+  color: #333;
+}
+.btn-delete {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  background: #ff4d4f;
+  color: #fff;
+  margin-top: 0;
+  cursor: pointer;
+}
+.small {
+  font-size: 0.8rem;
+  color: #666;
+}
+.home-box {
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.home-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+}
+ul {
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+}
+li {
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  border-radius: 8px;
+}
+.match-row.correct { background: #e6ffe6; }
+.match-row.wrong { background: #ffe6e6; }
+.match-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.match-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.match-actions input[type="text"] {
+  max-width: 140px;
+}
+.table-wrapper {
+  max-height: 500px;
+  overflow: auto;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+th, td {
+  padding: 4px 6px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: right;
+}
+th:first-child, td:first-child {
+  text-align: left;
+}
+th {
+  background: #fafafa;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.text-error { color: #b00020; }
+.text-success { color: #006400; }
+
+@media (max-width: 768px) {
+  th:nth-child(3), td:nth-child(3) { display: none; } /* Nazione */
+  th:nth-child(4), td:nth-child(4) { display: none; } /* Campionato */
+}

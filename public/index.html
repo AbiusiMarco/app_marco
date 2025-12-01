@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Match Analysis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Match Analysis</h1>
+
+    <!-- HOME -->
+    <div id="homeScreen">
+      <div class="card home-box" onclick="showAnalysis()">
+        <h2>Analysis</h2>
+        <p class="small">
+          Inserisci le quote dei bookmaker, i gol fatti/subiti e ottieni l'analisi della partita.
+        </p>
+        <button type="button" class="btn-full">Vai ad Analysis</button>
+      </div>
+
+      <div class="card home-box" onclick="showPalinsesto()">
+        <h2>Palinsesto</h2>
+        <p class="small">
+          Visualizza le partite disponibili da oggi in avanti, filtrate per data, nazione e campionato.
+        </p>
+        <button type="button" class="btn-full">Vai al Palinsesto</button>
+      </div>
+
+      <div class="card home-box" onclick="showStudio()">
+        <h2>Studio Partite</h2>
+        <p class="small">
+          Elenco dei pronostici manuali salvati dalla sezione Analysis.
+        </p>
+        <button type="button" class="btn-full">Vai a Studio Partite</button>
+      </div>
+    </div>
+
+    <!-- ANALYSIS -->
+    <div id="analysisScreen" style="display:none;">
+      <button type="button" class="btn-secondary" onclick="showHome()">← Torna alla Home</button>
+
+      <div class="card">
+        <h2>Squadre</h2>
+        <div class="row">
+          <div class="field">
+            <label>Squadra Casa</label>
+            <input id="teamHome" type="text" placeholder="Es: Lecce" />
+          </div>
+          <div class="field">
+            <label>Squadra Trasferta</label>
+            <input id="teamAway" type="text" placeholder="Es: Torino" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Pronostico Manuale</h2>
+        <div class="row">
+          <div class="field">
+            <label>Pronostico (1, X, 2, 1X, GG, Over 2.5...)</label>
+            <input id="manualPrediction" type="text" placeholder="Es: 1X" />
+          </div>
+        </div>
+        <button type="button" onclick="salvaPronostico()">Salva pronostico</button>
+        <div id="manualMessage" class="small"></div>
+      </div>
+
+      <div class="card">
+        <h2>Quote reali 1 X 2</h2>
+        <div class="row">
+          <div class="field">
+            <label>Quota 1</label>
+            <input id="odd1" type="text" value="3,10" />
+          </div>
+          <div class="field">
+            <label>Quota X</label>
+            <input id="oddX" type="text" value="2,88" />
+          </div>
+          <div class="field">
+            <label>Quota 2</label>
+            <input id="odd2" type="text" value="2,60" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Gol fatti e subiti – CASA</h2>
+        <div class="row">
+          <div class="field">
+            <label>Fatti</label>
+            <input id="homeGF" type="number" value="3" />
+          </div>
+          <div class="field">
+            <label>Subiti</label>
+            <input id="homeGA" type="number" value="7" />
+          </div>
+          <div class="field">
+            <label>Partite</label>
+            <input id="homeGames" type="number" value="6" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Gol fatti e subiti – TRASFERTA</h2>
+        <div class="row">
+          <div class="field">
+            <label>Fatti</label>
+            <input id="awayGF" type="number" value="5" />
+          </div>
+          <div class="field">
+            <label>Subiti</label>
+            <input id="awayGA" type="number" value="10" />
+          </div>
+          <div class="field">
+            <label>Partite</label>
+            <input id="awayGames" type="number" value="6" />
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-full" onclick="calcola()">Analizza Partita</button>
+
+      <div id="risultati"></div>
+    </div>
+
+    <!-- PALINSESTO (solo lettura da DB) -->
+    <div id="palinsestoScreen" style="display:none;">
+      <button type="button" class="btn-secondary" onclick="showHome()">← Torna alla Home</button>
+
+      <div class="card">
+        <h2>Filtri palinsesto</h2>
+        <div class="row">
+          <div class="field">
+            <label>Data (da oggi in poi)</label>
+            <input type="date" id="filterDate" onchange="applyPalinsestoFilters()" />
+          </div>
+          <div class="field">
+            <label>Nazione</label>
+            <select id="filterCountry" onchange="applyPalinsestoFilters()">
+              <option value="">Tutte le nazioni</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Campionato (league)</label>
+            <select id="filterLeague" onchange="applyPalinsestoFilters()">
+              <option value="">Tutti i campionati</option>
+            </select>
+          </div>
+        </div>
+        <p class="small">
+          Partite totali da oggi: <span id="totalMatches">0</span> &nbsp;|&nbsp;
+          Partite filtrate: <span id="filteredMatches">0</span>
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Palinsesto</h2>
+        <div id="palinsestoEmpty" class="small">
+          Caricamento palinsesto in corso...
+        </div>
+        <div id="palinsestoTableWrapper" class="table-wrapper" style="display:none;">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Ora</th>
+                <th>Nazione</th>
+                <th>Campionato</th>
+                <th>Partita</th>
+                <th>1</th>
+                <th>X</th>
+                <th>2</th>
+                <th>Azioni</th>
+              </tr>
+            </thead>
+            <tbody id="palinsestoTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDIO PARTITE -->
+    <div id="studioScreen" style="display:none;">
+      <button type="button" class="btn-secondary" onclick="showHome()">← Torna alla Home</button>
+
+      <div class="card">
+        <h2>Studio Partite</h2>
+        <div id="studioPartite"></div>
+        <p class="small">
+          I pronostici vengono salvati dalla sezione <strong>Analysis</strong> tramite il box “Pronostico Manuale”.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
