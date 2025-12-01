@@ -19,8 +19,9 @@ async function initDb() {
       home TEXT,
       away TEXT,
       odd1 REAL,
-      oddX REAL,
-      odd2 REAL
+      oddx REAL,
+      odd2 REAL,
+      delta_bv REAL            -- |odd1 - odd2|
     );
   `;
   await pool.query(sql);
@@ -44,13 +45,21 @@ async function replaceAllMatches(matches) {
 
     const insertSql = `
       INSERT INTO matches
-      (date, time, league, country, home, away, odd1, oddX, odd2)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+      (date, time, league, country, home, away, odd1, oddx, odd2, delta_bv)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
     `;
 
     for (const m of matches) {
       const isoDate = dateITtoISO(m.date);
       if (!isoDate) continue;
+
+      const odd1 = m.odd1 != null ? Number(m.odd1) : null;
+      const oddx = m.oddX != null ? Number(m.oddX) : null;
+      const odd2 = m.odd2 != null ? Number(m.odd2) : null;
+
+      // calcola delta_bv = |odd1 - odd2| se entrambe presenti
+      const deltaBV =
+        odd1 != null && odd2 != null ? Math.abs(odd1 - odd2) : null;
 
       await client.query(insertSql, [
         isoDate,
@@ -59,9 +68,10 @@ async function replaceAllMatches(matches) {
         m.country || '',
         m.home || '',
         m.away || '',
-        m.odd1 != null ? Number(m.odd1) : null,
-        m.oddX != null ? Number(m.oddX) : null,
-        m.odd2 != null ? Number(m.odd2) : null,
+        odd1,
+        oddx,
+        odd2,
+        deltaBV,
       ]);
     }
 
@@ -74,21 +84,56 @@ async function replaceAllMatches(matches) {
   }
 }
 
-// legge le partite con data >= fromDateISO (YYYY-MM-DD)
-async function getMatchesFromDate(fromDateISO) {
+/**
+ * Legge le partite con filtri opzionali:
+ *  - fromDateISO: data minima (YYYY-MM-DD)
+ *  - country: nazione (es. 'Italy')
+ *  - league: campionato
+ *  - recommended: se true applica il filtro "partite consigliate"
+ *      delta_bv <= 1.8 AND (oddx <= odd1 OR oddx <= odd2)
+ */
+async function getMatches(filters) {
+  const { fromDateISO, country, league, recommended } = filters;
+
+  const conditions = [];
+  const params = [];
+  let i = 1;
+
+  if (fromDateISO) {
+    conditions.push(`date >= $${i++}`);
+    params.push(fromDateISO);
+  }
+
+  if (country) {
+    conditions.push(`country = $${i++}`);
+    params.push(country);
+  }
+
+  if (league) {
+    conditions.push(`league = $${i++}`);
+    params.push(league);
+  }
+
+  if (recommended) {
+    conditions.push(`delta_bv <= 1.8 AND (oddx <= odd1 OR oddx <= odd2)`);
+  }
+
+  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+
   const sql = `
-    SELECT id, date, time, league, country, home, away, odd1, oddX, odd2
+    SELECT id, date, time, league, country, home, away, odd1, oddx, odd2, delta_bv
     FROM matches
-    WHERE date >= $1
+    ${whereClause}
     ORDER BY date ASC, time ASC
   `;
-  const res = await pool.query(sql, [fromDateISO]);
+
+  const res = await pool.query(sql, params);
   return res.rows;
 }
 
 module.exports = {
   initDb,
   replaceAllMatches,
-  getMatchesFromDate,
+  getMatches,
   dateITtoISO,
 };
