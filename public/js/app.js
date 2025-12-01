@@ -346,14 +346,46 @@ function applyPalinsestoFilters() {
   const dateFilterISO = document.getElementById("filterDate").value;
   const countryFilter = document.getElementById("filterCountry").value;
   const leagueFilter = document.getElementById("filterLeague").value;
+  const recommendedChecked = document.getElementById("recommendedCheckbox")
+    ? document.getElementById("recommendedCheckbox").checked
+    : false;
 
   palinsestoFiltered = palinsestoAll.filter(m => {
+    // filtro DATA
     if (dateFilterISO) {
       const matchISO = dateITtoISO(m.date);
       if (matchISO !== dateFilterISO) return false;
     }
+
+    // filtro NAZIONE
     if (countryFilter && m.country !== countryFilter) return false;
+
+    // filtro CAMPIONATO
     if (leagueFilter && m.league !== leagueFilter) return false;
+
+    // filtro PARTITE CONSIGLIATE
+    if (recommendedChecked) {
+      const odd1 = typeof m.odd1 === 'number' ? m.odd1 : null;
+      const oddX = typeof m.oddX === 'number' ? m.oddX : null;
+      const odd2 = typeof m.odd2 === 'number' ? m.odd2 : null;
+      const delta = typeof m.delta_bv === 'number' ? m.delta_bv : null;
+
+      // se manca qualcuno dei dati necessari, scartiamo
+      if (delta == null || oddX == null || (odd1 == null && odd2 == null)) {
+        return false;
+      }
+
+      // tua logica: delta_bv <= 1.8 AND (oddx <= odd1 OR oddx <= odd2)
+      const condDelta = delta <= 1.8;
+      const condX =
+        (odd1 != null && oddX <= odd1) ||
+        (odd2 != null && oddX <= odd2);
+
+      if (!(condDelta && condX)) {
+        return false;
+      }
+    }
+
     return true;
   });
 
