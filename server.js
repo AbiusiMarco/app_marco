@@ -1,7 +1,11 @@
 // server.js
 const express = require('express');
 const path = require('path');
-const { initDb, replaceAllMatches, getMatches } = require('./db');
+const {
+  initDb,
+  replaceAllMatches,
+  getMatchesFromDate,
+} = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,12 +13,18 @@ const ADMIN_KEY = process.env.ADMIN_KEY || 'supersegreto123';
 
 app.use(express.json());
 
-// statici per utenti
+// statici per gli utenti (index.html, js, css)
 app.use(express.static(path.join(__dirname, 'public')));
-// pagina admin upload
+
+// pagina admin upload (cartella /admin)
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
-// inizializza il DB (crea tabella se non esiste)
+// (opzionale) queste URL caricano comunque index.html
+app.get(['/palinsesto', '/analysis', '/studio'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// inizializza il DB
 initDb()
   .then(() => {
     console.log('DB inizializzato');
@@ -45,9 +55,8 @@ app.post('/api/admin/upload-palinsesto', async (req, res) => {
   }
 });
 
-/* ===== API UTENTE: leggere partite ===== */
+/* ===== API UTENTE: leggere partite da oggi in poi ===== */
 
-// data di oggi in formato YYYY-MM-DD
 function todayISO() {
   const now = new Date();
   const yyyy = now.getFullYear();
@@ -56,7 +65,6 @@ function todayISO() {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-// converte "YYYY-MM-DD" -> "DD/MM/YYYY"
 function isoToIT(iso) {
   if (!iso) return '';
   const [yyyy, mm, dd] = iso.split('-');
@@ -65,38 +73,22 @@ function isoToIT(iso) {
 
 app.get('/api/matches', async (req, res) => {
   const from = req.query.from || todayISO();
-  const country = req.query.country || null;
-  const league = req.query.league || null;
-  const recommended = req.query.recommended === 'true'; // checkbox "partite consigliate"
 
   try {
-    const rows = await getMatches({
-      fromDateISO: from,
-      country,
-      league,
-      recommended,
-    });
-
-    const result = rows.map(r => {
-      // node-postgres per DATE di solito restituisce una stringa "YYYY-MM-DD"
-      const isoDate =
-        r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date);
-
-      return {
-        id: r.id,
-        date: isoToIT(isoDate),
-        time: r.time,
-        league: r.league,
-        country: r.country,
-        home: r.home,
-        away: r.away,
-        odd1: r.odd1,
-        oddX: r.oddx,       // attenzione: in Postgres il campo è "oddx"
-        odd2: r.odd2,
-        delta_bv: r.delta_bv,
-      };
-    });
-
+    const rows = await getMatchesFromDate(from);
+    const result = rows.map(r => ({
+      id: r.id,
+      date: isoToIT(r.date.toISOString().slice(0, 10)),
+      time: r.time,
+      league: r.league,
+      country: r.country,
+      home: r.home,
+      away: r.away,
+      odd1: r.odd1,
+      oddX: r.oddX,
+      odd2: r.odd2,
+      delta_bv: r.delta_bv ?? null
+    }));
     res.json(result);
   } catch (err) {
     console.error('Errore lettura matches:', err);
