@@ -1,7 +1,7 @@
 // server.js
 const express = require('express');
 const path = require('path');
-const { initDb, replaceAllMatches, getMatchesFromDate } = require('./db');
+const { initDb, replaceAllMatches, getMatches } = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -45,8 +45,9 @@ app.post('/api/admin/upload-palinsesto', async (req, res) => {
   }
 });
 
-/* ===== API UTENTE: leggere partite da oggi in poi ===== */
+/* ===== API UTENTE: leggere partite ===== */
 
+// data di oggi in formato YYYY-MM-DD
 function todayISO() {
   const now = new Date();
   const yyyy = now.getFullYear();
@@ -55,6 +56,7 @@ function todayISO() {
   return `${yyyy}-${mm}-${dd}`;
 }
 
+// converte "YYYY-MM-DD" -> "DD/MM/YYYY"
 function isoToIT(iso) {
   if (!iso) return '';
   const [yyyy, mm, dd] = iso.split('-');
@@ -63,21 +65,38 @@ function isoToIT(iso) {
 
 app.get('/api/matches', async (req, res) => {
   const from = req.query.from || todayISO();
+  const country = req.query.country || null;
+  const league = req.query.league || null;
+  const recommended = req.query.recommended === 'true'; // checkbox "partite consigliate"
 
   try {
-    const rows = await getMatchesFromDate(from);
-    const result = rows.map(r => ({
-      id: r.id,
-      date: isoToIT(r.date.toISOString().slice(0, 10)), // r.date è un oggetto Date
-      time: r.time,
-      league: r.league,
-      country: r.country,
-      home: r.home,
-      away: r.away,
-      odd1: r.odd1,
-      oddX: r.oddX,
-      odd2: r.odd2,
-    }));
+    const rows = await getMatches({
+      fromDateISO: from,
+      country,
+      league,
+      recommended,
+    });
+
+    const result = rows.map(r => {
+      // node-postgres per DATE di solito restituisce una stringa "YYYY-MM-DD"
+      const isoDate =
+        r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date);
+
+      return {
+        id: r.id,
+        date: isoToIT(isoDate),
+        time: r.time,
+        league: r.league,
+        country: r.country,
+        home: r.home,
+        away: r.away,
+        odd1: r.odd1,
+        oddX: r.oddx,       // attenzione: in Postgres il campo è "oddx"
+        odd2: r.odd2,
+        delta_bv: r.delta_bv,
+      };
+    });
+
     res.json(result);
   } catch (err) {
     console.error('Errore lettura matches:', err);
