@@ -76,4 +76,554 @@ h1 {
   border-left: 4px solid #a855f7;
 }
 
-.card--studio
+.card--studio {
+  border-left: 4px solid #22c55e;
+}
+
+/* Home “box” cliccabili */
+.home-box {
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.home-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.28);
+}
+
+/* Layout home: su mobile tutto in colonna, su desktop griglia a 3 */
+#homeScreen {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* ===== TIPOGRAFIA ===== */
+
+.small {
+  font-size: 0.86rem;
+  color: #4b5563;
+}
+
+.text-error {
+  color: #dc2626;
+}
+
+.text-success {
+  color: #16a34a;
+}
+
+/* ===== BOTTONI ===== */
+
+button,
+.btn-full,
+.btn-secondary,
+.btn-delete {
+  font: inherit;
+  border-radius: 999px;
+  border: none;
+  padding: 0.55rem 1.2rem;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.1s ease, box-shadow 0.18s ease;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btn-full {
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #ffffff;
+  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.55);
+  border: 1px solid rgba(191, 219, 254, 0.6);
+}
+
+.btn-full:hover {
+  background: linear-gradient(135deg, #1d4ed8, #4338ca);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 35px rgba(59, 130, 246, 0.65);
+}
+
+.btn-secondary {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.btn-secondary:hover {
+  background: #d1d5db;
+}
+
+.btn-delete {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.btn-delete:hover {
+  background: #fecaca;
+}
+
+/* ===== CAMPI INPUT ===== */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.field label {
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="password"],
+select {
+  border-radius: 0.6rem;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.9rem;
+  width: 100%;
+  background: #f9fafb;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+  background: #ffffff;
+}
+
+/* Date placeholder “gg/mm/aaaa” sugli input type=date */
+input[type="date"]::before {
+  color: #9ca3af;
+}
+
+/* Righe con più campi: su mobile in colonna, su desktop in riga */
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ===== PALINSESTO / TABELLE ===== */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto; /* scroll orizzontale su schermi stretti */
+  border-radius: 0.75rem;
+  border: 1px solid rgba(209, 213, 219, 0.7);
+}
+
+/* riduco scrollbars */
+.table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5f5;
+  border-radius: 999px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+thead {
+  background: linear-gradient(to right, #eff6ff, #fdf2ff);
+}
+
+thead th {
+  font-weight: 600;
+  text-align: left;
+  padding: 0.6rem 0.4rem;
+  white-space: nowrap;
+  color: #1f2937;
+}
+
+tbody td {
+  padding: 0.5rem 0.4rem;
+  border-top: 1px solid #e5e7eb;
+  vertical-align: middle;
+}
+
+tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* Colonna “Azioni” allineata a destra */
+tbody td:last-child {
+  text-align: right;
+}
+
+/* Colonne quote più evidenti */
+tbody td:nth-child(6),
+tbody td:nth-child(7),
+tbody td:nth-child(8) {
+  font-weight: 600;
+  color: #1d4ed8;
+}
+
+/* ===== STUDIO PARTITE ===== */
+
+#studioPartite ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.match-row {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.match-header {
+  margin-bottom: 0.3rem;
+}
+
+.match-label {
+  font-size: 0.9rem;
+}
+
+.match-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+
+.match-row.correct .match-label {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.match-row.wrong .match-label {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+/* Inputs piccoli dentro match-actions */
+.match-actions input[type="text"] {
+  max-width: 130px;
+  padding: 0.35rem 0.45rem;
+  font-size: 0.8rem;
+}
+
+/* ===== VARIE ===== */
+
+#palinsestoEmpty {
+  padding: 0.5rem 0;
+}
+
+/* bottone “Torna alla home” */
+button.btn-secondary {
+  margin-bottom: 0.75rem;
+}
+
+/* ===== BREAKPOINT TABLET / DESKTOP ===== */
+
+@media (min-width: 768px) {
+  body {
+    padding-top: 0.5rem;
+  }
+
+  .container {
+    padding: 1.5rem 1rem 2.5rem;
+  }
+
+  h1 {
+    font-size: 2.1rem;
+    margin-bottom: 2rem;
+  }
+
+  /* home: 3 colonne su desktop */
+  #homeScreen {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .card h2 {
+    font-size: 1.2rem;
+  }
+
+  .row {
+    flex-direction: row;
+  }
+
+  .field {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  /* Tabella un po' più grande su desktop */
+  table {
+    font-size: 0.9rem;
+  }
+
+  thead th,
+  tbody td {
+    padding: 0.6rem 0.5rem;
+  }
+}
+
+/* ===== BREAKPOINT > 1024px (desktop grande) ===== */
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 2rem 0 3rem;
+  }
+
+  h1 {
+    font-size: 2.3rem;
+  }
+
+  .card {
+    padding: 1.5rem 1.75rem;
+  }
+}
+
+/* === SHELL & HEADER SUPERIORE === */
+
+.app-shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, #1d2433 0, #050816 45%, #020617 100%);
+}
+
+.page-header {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.2rem 1rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #e5e7eb;
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.app-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: conic-gradient(from 200deg, #22c55e, #22d3ee, #2563eb, #a855f7, #22c55e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: #ffffff;
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.6);
+}
+
+.app-subtitle {
+  font-size: 0.92rem;
+  color: #9ca3af;
+  max-width: 520px;
+}
+
+/* Sovrascrivo h1 qui nel header */
+.page-header h1 {
+  font-size: 1.7rem;
+  margin-bottom: 0.15rem;
+  color: #f9fafb;
+  letter-spacing: 0.03em;
+}
+
+/* === CHIP SOTTO TITOLO === */
+.app-tagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.6);
+  color: #e5e7eb;
+  font-size: 0.75rem;
+  margin-top: 0.4rem;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+/* === HOME GRID CON CARD === */
+
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.home-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.home-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+/* immagine dentro card home */
+.home-illustration {
+  width: 100%;
+  border-radius: 0.8rem;
+  margin-top: 0.6rem;
+  object-fit: cover;
+  max-height: 150px;
+}
+
+/* Contatore palinsesto */
+.palinsesto-counter {
+  margin-top: 0.6rem;
+}
+
+/* Linea decorativa sopra titolo palinsesto */
+.card-header-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.card-header-line::before {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, #2563eb, transparent);
+  max-width: 60px;
+}
+
+/* Miglioro il margine del main container rispetto al nuovo header */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+}
+
+/* HOME title non più usato come h1 dentro .container */
+.container > h1 {
+  display: none;
+}
+
+/* Desktop: home in 3 colonne */
+@media (min-width: 768px) {
+  .page-header {
+    padding: 1.6rem 1rem 0.8rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .home-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* === HERO BANNER HOME === */
+
+.hero-banner {
+  background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 55%),
+              radial-gradient(circle at bottom right, rgba(52, 211, 153, 0.18), transparent 55%),
+              #020617;
+  color: #e5e7eb;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  margin-bottom: 1.25rem;
+}
+
+.hero-banner::after {
+  display: none; /* disattivo l'effetto card generico qui */
+}
+
+.hero-content {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.hero-title {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: #f9fafb;
+}
+
+.hero-text {
+  font-size: 0.9rem;
+  color: #d1d5db;
+  margin-bottom: 0.75rem;
+}
+
+.hero-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.hero-pill {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.hero-image-wrapper {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
+}
+
+.hero-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* badge probabilità sopra immagine */
+.hero-badge {
+  position: absolute;
+  bottom: 0.7rem;
+  left: 0.7rem;
+  padding: 0.3rem 0.55rem;
+  border-radius: 0.7rem;
+  font-size: 0.7rem;
+  background: rgba(15, 23, 42, 0.85);
+  color: #e5e7eb;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+}
+
+/* responsive hero */
+@media (max-width: 767px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-image-wrapper {
+    max-height: 190px;
+  }
+}
