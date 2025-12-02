@@ -14,8 +14,11 @@
         <div>
           <h1>Match Analysis</h1>
           <p class="app-subtitle">
-            Analizza le partite, consulta il palinsesto aggiornato e salva i tuoi pronostici.
+            Analizza le partite, consulta il palinsesto aggiornato e salva i tuoi pronostici in un’unica dashboard.
           </p>
+          <div class="app-tagline">
+            <span>📈 Focus: calcio & scommesse sportive</span>
+          </div>
         </div>
       </div>
     </header>
@@ -23,43 +26,95 @@
     <main class="container">
       <!-- HOME -->
       <section id="homeScreen">
+        <!-- HERO BANNER CON IMMAGINE -->
+        <article class="hero-banner card">
+          <div class="hero-content">
+            <div>
+              <h2 class="hero-title">Tieni sotto controllo il tuo palinsesto</h2>
+              <p class="hero-text">
+                Confronta quote, monitora i gol fatti/subiti e salva i pronostici migliori.
+                Tutto organizzato per data, nazione e campionato.
+              </p>
+              <div class="hero-highlights">
+                <span class="hero-pill">⚙️ Analisi rapida delle quote</span>
+                <span class="hero-pill">📅 Palinsesto aggiornato</span>
+                <span class="hero-pill">🧠 Studio delle partite</span>
+              </div>
+              <button type="button" class="btn-full" onclick="showAnalysis()">
+                Inizia subito dall’Analysis
+              </button>
+            </div>
+            <div class="hero-image-wrapper">
+              <!-- Puoi sostituire questa immagine con una tua (Google, ecc.) -->
+              <img
+                src="https://images.unsplash.com/photo-1518091043644-c1f4c3c6c1c5?auto=format&fit=crop&w=1200&q=80"
+                alt="Stadio illuminato per una partita di calcio"
+              />
+              <div class="hero-badge">
+                🎯 Match in evidenza · Quote live
+              </div>
+            </div>
+          </div>
+        </article>
+
         <div class="home-grid">
-          <article class="card home-box" onclick="showAnalysis()">
+          <!-- CARD ANALYSIS -->
+          <article class="card card--analysis home-box" onclick="showAnalysis()">
             <div class="home-card-header">
               <div class="home-icon">📊</div>
               <div>
                 <h2>Analysis</h2>
                 <p class="small">
-                  Inserisci quote e dati delle squadre per ottenere analisi dettagliate.
+                  Inserisci quote e dati delle squadre per ottenere analisi dettagliate e salvare i pronostici migliori.
                 </p>
               </div>
             </div>
+            <!-- Immagine a tema grafici/analysis -->
+            <img
+              class="home-illustration"
+              src="https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=900&q=80"
+              alt="Dashboard con grafici e statistiche"
+            />
             <button type="button" class="btn-full">Vai ad Analysis</button>
           </article>
 
-          <article class="card home-box" onclick="showPalinsesto()">
+          <!-- CARD PALINSESTO -->
+          <article class="card card--palinsesto home-box" onclick="showPalinsesto()">
             <div class="home-card-header">
               <div class="home-icon">📅</div>
               <div>
                 <h2>Palinsesto</h2>
                 <p class="small">
-                  Visualizza tutte le partite disponibili, filtrate per data, nazione e campionato.
+                  Visualizza tutte le partite disponibili, filtrate per data, nazione e campionato. Tieni d’occhio le quote 1X2.
                 </p>
               </div>
             </div>
+            <!-- Immagine a tema calendario / quote -->
+            <img
+              class="home-illustration"
+              src="https://images.unsplash.com/photo-1528892952291-009c663ce843?auto=format&fit=crop&w=900&q=80"
+              alt="Quote delle scommesse su uno schermo"
+            />
             <button type="button" class="btn-full">Vai al Palinsesto</button>
           </article>
 
-          <article class="card home-box" onclick="showStudio()">
+          <!-- CARD STUDIO PARTITE -->
+          <article class="card card--studio home-box" onclick="showStudio()">
             <div class="home-card-header">
               <div class="home-icon">🧠</div>
               <div>
                 <h2>Studio Partite</h2>
                 <p class="small">
-                  Raccogli e organizza i pronostici che hai salvato dalla sezione Analysis.
+                  Raccogli e organizza i pronostici che hai salvato dalla sezione Analysis e tieni traccia dei risultati.
                 </p>
               </div>
             </div>
+            <!-- Immagine a tema lavagna tattica / studio -->
+            <img
+              class="home-illustration"
+              src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80"
+              alt="Allenatore che studia una tattica o strategia"
+            />
             <button type="button" class="btn-full">Vai a Studio Partite</button>
           </article>
         </div>
@@ -69,7 +124,7 @@
       <section id="analysisScreen" style="display:none;">
         <button type="button" class="btn-secondary" onclick="showHome()">← Torna alla Home</button>
 
-        <div class="card">
+        <div class="card card--analysis">
           <h2>Squadre</h2>
           <div class="row">
             <div class="field">
@@ -83,7 +138,7 @@
           </div>
         </div>
 
-        <div class="card">
+        <div class="card card--analysis">
           <h2>Pronostico Manuale</h2>
           <div class="row">
             <div class="field">
@@ -91,11 +146,11 @@
               <input id="manualPrediction" type="text" placeholder="Es: 1X" />
             </div>
           </div>
-          <button type="button" onclick="salvaPronostico()">Salva pronostico</button>
+          <button type="button" class="btn-full" onclick="salvaPronostico()">Salva pronostico</button>
           <div id="manualMessage" class="small"></div>
         </div>
 
-        <div class="card">
+        <div class="card card--analysis">
           <h2>Quote reali 1 X 2</h2>
           <div class="row">
             <div class="field">
@@ -113,7 +168,7 @@
           </div>
         </div>
 
-        <div class="card">
+        <div class="card card--analysis">
           <h2>Gol fatti e subiti – CASA</h2>
           <div class="row">
             <div class="field">
@@ -131,7 +186,7 @@
           </div>
         </div>
 
-        <div class="card">
+        <div class="card card--analysis">
           <h2>Gol fatti e subiti – TRASFERTA</h2>
           <div class="row">
             <div class="field">
@@ -158,7 +213,7 @@
       <section id="palinsestoScreen" style="display:none;">
         <button type="button" class="btn-secondary" onclick="showHome()">← Torna alla Home</button>
 
-        <div class="card">
+        <div class="card card--palinsesto">
           <h2>Filtri palinsesto</h2>
           <div class="row">
             <div class="field">
@@ -184,7 +239,7 @@
           </p>
         </div>
 
-        <div class="card">
+        <div class="card card--palinsesto">
           <div class="card-header-line">
             <h2>Palinsesto</h2>
           </div>
@@ -216,7 +271,7 @@
       <section id="studioScreen" style="display:none;">
         <button type="button" class="btn-secondary" onclick="showHome()">← Torna alla Home</button>
 
-        <div class="card">
+        <div class="card card--studio">
           <h2>Studio Partite</h2>
           <div id="studioPartite"></div>
           <p class="small">
